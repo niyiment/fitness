@@ -17,7 +17,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Workout extends BaseAuditActivableEntity{
+public class Workout extends BaseAuditActivatableEntity {
 
     private LocalDateTime workoutDate;
 

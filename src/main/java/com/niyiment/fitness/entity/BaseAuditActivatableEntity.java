@@ -9,7 +9,7 @@ import lombok.Setter;
 @MappedSuperclass
 @Setter
 @Getter
-public abstract class BaseAuditActivableEntity extends BaseAuditEntity{
+public abstract class BaseAuditActivatableEntity extends BaseAuditEntity{
     @Column(nullable = false)
     private boolean active = true;
 }
