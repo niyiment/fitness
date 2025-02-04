@@ -112,7 +112,7 @@ public class WorkoutService {
      * @return
      */
 
-    public WorkoutResponseDTO toDTO(Workout workout) {
+    private WorkoutResponseDTO toDTO(Workout workout) {
         WorkoutResponseDTO result = new WorkoutResponseDTO();
         result.setId(workout.getId());
         result.setWorkoutDate(workout.getWorkoutDate());
@@ -128,7 +128,7 @@ public class WorkoutService {
      * @param dto
      */
 
-    public void fromDTO(Workout workout, WorkoutDTO dto) {
+    private void fromDTO(Workout workout, WorkoutDTO dto) {
         workout.setWorkoutDate(dto.getWorkoutDate() != null ? dto.getWorkoutDate() : LocalDateTime.now());
         workout.setWorkoutType(dto.getWorkoutType());
         workout.setActive(true);
