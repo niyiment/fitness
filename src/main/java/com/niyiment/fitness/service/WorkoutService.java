@@ -28,20 +28,21 @@ public class WorkoutService {
 
 
     /**
-     * Get all workouts
-     * @param filter
+     * Retrieves workouts with pagination and optional filters
+     * @param workoutType optional filter by workout type
      * @param startDate
      * @param endDate
-     * @param pageable
-     * @return paginated WorkoutResponseDTO
+     * @param pageable Pagination information
+     * @return A page of WorkoutResponseDTO
      */
-    public Page<WorkoutResponseDTO> getAllWorkouts(String filter, LocalDateTime startDate,
+    public Page<WorkoutResponseDTO> getAllWorkouts(String workoutType, LocalDateTime startDate,
                                                    LocalDateTime endDate, Pageable pageable) {
-        log.info("Getting all workouts with filter: {}, start date: {}, end date: {}", filter, startDate, endDate);
+        log.info("Getting all workouts with filter: {}, start date: {}, end date: {}", workoutType, startDate, endDate);
         Specification<Workout> spec = WorkoutSpecification.isActive();
-        if (filter != null) {
-            spec.and(WorkoutSpecification.filterByWorkoutType(filter));
-        } else if (startDate != null && endDate != null) {
+        if (workoutType != null && !workoutType.isEmpty()) {
+            spec.and(WorkoutSpecification.filterByWorkoutType(workoutType));
+        }
+        if (startDate != null && endDate != null) {
             spec.and(WorkoutSpecification.filterByWorkoutDate(startDate, endDate));
         }
 
@@ -51,8 +52,8 @@ public class WorkoutService {
     }
 
     /**
-     * Get workout by id
-     * @param id
+     * Retreives a workout by its ID
+     * @param id the workout ID
      * @return WorkoutResponseDTO
      */
     public WorkoutResponseDTO getWorkoutById(UUID id) {
@@ -128,7 +129,7 @@ public class WorkoutService {
      */
 
     public void fromDTO(Workout workout, WorkoutDTO dto) {
-        workout.setWorkoutDate(dto.getWorkoutDate());
+        workout.setWorkoutDate(dto.getWorkoutDate() != null ? dto.getWorkoutDate() : LocalDateTime.now());
         workout.setWorkoutType(dto.getWorkoutType());
         workout.setActive(true);
     }
