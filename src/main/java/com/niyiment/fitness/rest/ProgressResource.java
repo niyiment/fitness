@@ -2,13 +2,17 @@ package com.niyiment.fitness.rest;
 
 import com.niyiment.fitness.dto.ProgressDTO;
 import com.niyiment.fitness.dto.ProgressResponseDTO;
+import com.niyiment.fitness.dto.ReportData;
 import com.niyiment.fitness.service.ProgressService;
+import com.niyiment.fitness.report.ReportFormat;
 import com.niyiment.fitness.utility.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +24,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/progress")
 public class ProgressResource {
     private final ProgressService service;
+    private static final String CONTENT_DISPOSITION = "Content-Disposition";
 
     /**
      * Retrieve all active progress records with optional filtering and pagination
@@ -77,5 +82,31 @@ public class ProgressResource {
         return ResponseEntity.ok(ApiResponse.success("Progress updated successfully", result));
     }
 
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> exportReport(@RequestParam ReportFormat reportFormat) {
+        try {
+            ReportData reportData = service.getReportData();
+            byte[] fileBytes = service.generateReport(reportFormat, reportData);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            switch (reportFormat) {
+                case CSV:
+                    httpHeaders.setContentType(MediaType.TEXT_PLAIN);
+                    httpHeaders.set(CONTENT_DISPOSITION, "attachment; filename\"report.csv\"");
+                    break;
+                case PDF:
+                    httpHeaders.setContentType(MediaType.APPLICATION_PDF);
+                    httpHeaders.set(CONTENT_DISPOSITION, "attachment; filename\"report.pdf\"");
+                    break;
+                case EXCEL:
+                    httpHeaders.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+                    httpHeaders.set(CONTENT_DISPOSITION, "attachment; filename\"report.xlsx\"");
+                    break;
+            }
+            return ResponseEntity.ok()
+                    .headers(httpHeaders).body(fileBytes);
+        } catch (Exception exception) {
+            return ResponseEntity.internalServerError().body(null);
+        }
+    }
 
 }

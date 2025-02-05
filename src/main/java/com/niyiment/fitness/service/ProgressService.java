@@ -2,8 +2,13 @@ package com.niyiment.fitness.service;
 
 import com.niyiment.fitness.dto.ProgressDTO;
 import com.niyiment.fitness.dto.ProgressResponseDTO;
+import com.niyiment.fitness.dto.ReportData;
 import com.niyiment.fitness.entity.Progress;
 import com.niyiment.fitness.exception.ResourceNotFoundException;
+import com.niyiment.fitness.report.ReportFormat;
+import com.niyiment.fitness.report.ReportGenerationFactory;
+import com.niyiment.fitness.report.ReportGenerator;
+import com.niyiment.fitness.report.ReportService;
 import com.niyiment.fitness.repository.ProgressRepository;
 import com.niyiment.fitness.repository.ProgressSpecification;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +19,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ProgressService {
+public class ProgressService implements ReportService {
     private final ProgressRepository repository;
     private static final String RECORD_NOT_FOUND = "Record not found";
 
@@ -79,5 +87,35 @@ public class ProgressService {
         progress.setBodyFat(dto.getBodyFat());
         progress.setDate(dto.getDate());
         progress.setWeight(dto.getWeight());
+    }
+
+    public ReportData getReportData() {
+        final String title = "Fitness Progress Report";
+        List<String> headers = Arrays.asList("Date", "Weight", "Body Fat");
+        List<List<String>> records = getProgressRecord();
+
+        return new ReportData(title, headers, records);
+    }
+
+    private List<List<String>> getProgressRecord() {
+        List<Progress> progresses = repository.findAll();
+        List<List<String>> rows = new ArrayList<>();
+        progresses.forEach(progress -> {
+            List<String> row = Arrays.asList(
+                    progress.getDate().toString(),
+                    String.valueOf(progress.getWeight()),
+                    String.valueOf(progress.getBodyFat())
+            );
+            rows.add(row);
+        });
+
+        return rows;
+    }
+
+    @Override
+    public byte[] generateReport(ReportFormat reportFormat, ReportData reportData) throws Exception {
+        ReportGenerator reportGenerator = ReportGenerationFactory.createReportGenerator(reportFormat);
+
+        return reportGenerator.generateReport(reportData);
     }
 }

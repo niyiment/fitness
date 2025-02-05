@@ -1,4 +1,4 @@
-package com.niyiment.fitness.service.report;
+package com.niyiment.fitness.report;
 
 import com.niyiment.fitness.dto.ReportData;
 

@@ -1,7 +1,8 @@
-package com.niyiment.fitness.service.report;
+package com.niyiment.fitness.report;
 
 import com.niyiment.fitness.dto.ReportData;
 import com.opencsv.CSVWriter;
+import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Generates a CSV report using OpenCSV.
  */
+@Component
 public class CsvReportGenerator implements ReportGenerator {
 
     @Override
