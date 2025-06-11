@@ -6,52 +6,54 @@ This is a Spring Boot-based backend application designed to manage fitness-relat
 
 ### Features
 
-Workout Management: Log, retrieve, update, and filter workouts by type, date range, and pagination.
-Exercise Management: Create, retrieve, update, and delete exercises with optional filtering by name.
-Progress Tracking: Record and track user progress, including weight and date-based filtering, with exportable reports.
-API Responses: Standardized API responses using a custom ApiResponse wrapper for consistent success and error handling.
-Pagination and Sorting: All list endpoints support pagination and customizable sorting.
-Report Generation: Export progress data in CSV, PDF, or Excel formats.
+- **Workout Management**: Log, retrieve, update, and filter workouts by type, date range, and pagination.
+- **Exercise Management**: Create, retrieve, update, and delete exercises with optional filtering by name.
+- **Progress Tracking**: Record and track user progress, including weight and date-based filtering, with exportable reports.
+- **API Responses**: Standardized API responses using a custom ApiResponse wrapper for consistent success and error handling.
+- **Pagination and Sorting**: All list endpoints support pagination and customizable sorting.
+- **Report Generation**: Export progress data in CSV, PDF, or Excel formats.
 
 ### Technologies
 
-Spring Boot: Framework for building the RESTful API.
-Spring Data JPA: For database interactions.
-Lombok: To reduce boilerplate code (e.g., @RequiredArgsConstructor).
-Java 21: Programming language version.
-Maven: Dependency management and build tool.
-Database: Configurable for any JPA-compatible database (e.g., PostgreSQL, MySQL).
-Validation: Bean validation for incoming DTOs using @Valid.
+- **Spring Boot**: Framework for building the RESTful API.
+- **Spring Data JPA**: For database interactions.
+- **Lombok**: To reduce boilerplate code (e.g., @RequiredArgsConstructor).
+- **Java 21**: Programming language version.
+- **Maven**: Dependency management and build tool.
+- **Database**: Configurable for any JPA-compatible database (e.g., PostgreSQL, MySQL).
+- **Validation**: Bean validation for incoming DTOs using @Valid.
 
 ### API Endpoints
 The API is versioned under /api/v1 and consists of three main resources: Workouts, Exercises, and Progress.
-Workouts (/api/v1/workouts)
 
-GET /: Retrieve paginated workouts with optional filters for workoutType, startDate, endDate, and sorting.
-GET /{id}: Retrieve a workout by its UUID.
-POST /: Create a new workout using WorkoutDTO.
-PUT /{id}: Update an existing workout by UUID.
+#### Workouts (/api/v1/workouts)
 
-Exercises (/api/v1/exercises)
+- GET /: Retrieve paginated workouts with optional filters for workoutType, startDate, endDate, and sorting.
+- GET /{id}: Retrieve a workout by its UUID.
+- POST /: Create a new workout using WorkoutDTO.
+- PUT /{id}: Update an existing workout by UUID.
 
-GET /: Retrieve paginated exercises with optional filtering by name and sorting.
-GET /{id}: Retrieve an exercise by its UUID.
-POST /: Create a new exercise using ExerciseDTO.
-PUT /{id}: Update an existing exercise by UUID.
-DELETE /{id}: Delete an exercise by UUID.
+#### Exercises (/api/v1/exercises)
 
-Progress (/api/v1/progress)
+- GET /: Retrieve paginated exercises with optional filtering by name and sorting.
+- GET /{id}: Retrieve an exercise by its UUID.
+- POST /: Create a new exercise using ExerciseDTO.
+- PUT /{id}: Update an existing exercise by UUID.
+- DELETE /{id}: Delete an exercise by UUID.
 
-GET /: Retrieve paginated progress records with optional filters for minWeight, maxWeight, startDate, endDate, and sorting.
-GET /{id}: Retrieve a progress record by its UUID.
-POST /: Record new progress using ProgressDTO.
-PUT /{id}: Update an existing progress record by UUID.
-GET /export: Export progress data in CSV, PDF, or Excel format (specified by reportFormat parameter).
+#### Progress (/api/v1/progress)
+
+- GET /: Retrieve paginated progress records with optional filters for minWeight, maxWeight, startDate, endDate, and sorting.
+- GET /{id}: Retrieve a progress record by its UUID.
+- POST /: Record new progress using ProgressDTO.
+- PUT /{id}: Update an existing progress record by UUID.
+- GET /export: Export progress data in CSV, PDF, or Excel format (specified by reportFormat parameter).
 
 
 
-Example API Request
+### Example API Request
 Create a Workout
+```
 curl -X POST http://localhost:8080/api/v1/workouts \
 -H "Content-Type: application/json" \
 -d '{
@@ -60,7 +62,8 @@ curl -X POST http://localhost:8080/api/v1/workouts \
     "duration": 30
 }'
 
-Response:
+// Response:
+
 {
   "status": "success",
   "message": "Workout created successfully",
@@ -71,3 +74,4 @@ Response:
     "duration": 30
   }
 }
+```
